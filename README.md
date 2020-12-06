@@ -1,4 +1,4 @@
-# Haskell BrainfuckInterpreter
+# Haskell Brainfuck Interpreter
 
 This is a Brainfuck interpreter written in Haskell. The cells are unsigned 8-bit ints (represented using Word8).
 
