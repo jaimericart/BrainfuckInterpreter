@@ -86,8 +86,8 @@ runExpr Output = do
         Nothing -> return $ output bf
 runExpr Input = do
     bf <- get
-    shouldGet <- liftIO isEOF
-    if shouldGet then gets output else do
+    isEOF <- liftIO isEOF
+    if isEOF then gets output else do
         toStore <- liftIO getChar
         put $ bf { tape = M.insert (index bf) (toEnum $ fromEnum toStore) (tape bf)}
         return $ output bf
