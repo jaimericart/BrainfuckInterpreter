@@ -7,6 +7,7 @@ import Control.Monad.State
 import Data.Foldable (traverse_)
 import System.Environment (getArgs)
 import qualified Data.Word8 as W
+import System.IO (isEOF)
 
 data Expr = Comment | Rgt | Lft | Incr | Decr | Output | Input | Loop [Expr] deriving (Show, Eq)
 data Brainfuck = Brainfuck {
@@ -85,9 +86,11 @@ runExpr Output = do
         Nothing -> return $ output bf
 runExpr Input = do
     bf <- get
-    toStore <- liftIO getChar
-    put $ bf { tape = M.insert (index bf) (toEnum $ fromEnum toStore) (tape bf)}
-    return $ output bf
+    shouldGet <- liftIO isEOF
+    if shouldGet then gets output else do
+        toStore <- liftIO getChar
+        put $ bf { tape = M.insert (index bf) (toEnum $ fromEnum toStore) (tape bf)}
+        return $ output bf
 runExpr Comment = gets output
 runExpr (Loop exprs) = do
     bf <- get
